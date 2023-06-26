@@ -59,7 +59,7 @@ SHOW TABLES;
 -- 13. Which table(s) do you think contain a date type column? (Write this question and your answer in a comment)
 
 
-	-- All the tables in have date types except for the department table
+	-- All the tables have date types except for the department table
 
 
 -- 14. What is the relationship between the employees and the departments tables? (Write this question and your answer in a comment)
