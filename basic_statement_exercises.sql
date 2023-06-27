@@ -85,7 +85,7 @@ WHERE release_date BETWEEN 1990 and 1999; # BETWEEN function more precise
 
 # instructor entry
 SELECT name 
-AS low_selling_albums 
+AS low_selling_albums #as keyword used rename the column (use quotes '' for names that have spaces between words)
 FROM albums 
 WHERE sales < 20;
 
