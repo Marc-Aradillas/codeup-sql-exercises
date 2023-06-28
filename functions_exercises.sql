@@ -4,7 +4,7 @@
 -- Date: 06-28-2023
 
 -- 1. Copy the order by exercise and save it as functions_exercises.sql.
-
+USE employees;
 # ✔️
 
 -- 1. Find all employees with first names 'Irena', 'Vidya', or 'Maya', and order your results returned by first name. In your comments, 
@@ -97,14 +97,14 @@
 
 SELECT CONCAT(first_name, ' ', last_name) AS full_name
 FROM employees
-WHERE last_name LIKE '%E%';
+WHERE last_name LIKE 'e%e';
 
 
 -- 3. Convert the names produced in your last query to all uppercase.
 
 SELECT UPPER(CONCAT(first_name, ' ', last_name)) AS full_name # UPPER() function applied to the result of the CONCAT() function.
 FROM employees
-WHERE last_name LIKE '%E%';
+WHERE last_name LIKE 'e%e';
 
 
 -- 4. Use a function to determine how many results were returned from your previous query.
@@ -137,13 +137,22 @@ FROM salaries;
 
 -- SELECT LOWER(CONCAT(SUBSTR(first_name, 1, 1), (last_name, 1, 4))) # beginning code
 
-SELECT CONCAT(
-			LOWER(
-				SUBSTR(first_name, 1, 1)), 
-			LOWER(
-				SUBSTR(last_name, 1, 4)), '_',
+# first attempt (redundant LOWER)
+-- SELECT CONCAT(
+-- 			LOWER(
+-- 				SUBSTR(first_name, 1, 1)), 
+-- 			LOWER(
+-- 				SUBSTR(last_name, 1, 4)), '_',
+-- 			SUBSTR(birth_date, 6, 2), 
+--             SUBSTR(birth_date, 3, 2)) AS user_name
+            
+# instructor edit.
+SELECT LOWER(
+		CONCAT(
+			SUBSTR(first_name, 1, 1), 
+			SUBSTR(last_name, 1, 4), '_',
 			SUBSTR(birth_date, 6, 2), 
-            SUBSTR(birth_date, 3, 2)) AS user_name
+            SUBSTR(birth_date, 3, 2))) AS user_name
 FROM employees
 LIMIT 10;
 
