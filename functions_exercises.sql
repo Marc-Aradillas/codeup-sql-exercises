@@ -160,6 +160,7 @@ LIMIT 10;
 'dpive_0663'
 */
 
+# example
 
 /*
 +------------+------------+-----------+------------+
@@ -172,7 +173,7 @@ LIMIT 10;
 | kmali_0155 | Kyoichi    | Maliniak  | 1955-01-21 |
 | apreu_0453 | Anneke     | Preusig   | 1953-04-20 |
 | tziel_0557 | Tzvetan    | Zielinski | 1957-05-23 |
-| skall_0258 | Saniya     | Kalloufi  | 1958-02-19 |cakcu
+| skall_0258 | Saniya     | Kalloufi  | 1958-02-19 |
 | speac_0452 | Sumant     | Peac      | 1952-04-19 |
 | dpive_0663 | Duangkaew  | Piveteau  | 1963-06-01 |
 +------------+------------+-----------+------------+
