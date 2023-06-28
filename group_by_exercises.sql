@@ -100,6 +100,8 @@ ORDER BY number_usernames DESC;
 # Most tines is 6
 # 13251 duplicate usernames are duplicates 
 
+
+
 -- Bonus: More practice with aggregate functions:
 
 -- Determine the historic average salary for each employee. When you hear, read, or think "for each" with regard to SQL, you'll probably be grouping by that exact column.
