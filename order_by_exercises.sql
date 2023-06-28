@@ -178,7 +178,7 @@ ORDER BY last_name ASC, first_name ASC;
 SELECT emp_no, first_name, last_name
 FROM employees
 WHERE last_name LIKE 'e%e'
-ORDER BY emp_no;
+ORDER BY emp_no ASC;
 
 /*
 - 899

@@ -58,7 +58,7 @@ FROM employees
 WHERE hire_date LIKE '199%' 
 	AND birth_date LIKE '%12-25'
     ORDER BY hire_date ASC
-    LIMIT 5 OFFSET 45;
+    LIMIT 5 OFFSET 45; # page 10 in set
 
 -- 4. LIMIT and OFFSET can be used to create multiple pages of data. What is the relationship between OFFSET (number of results to skip), LIMIT (number of results per page),
 --    and the page number?
