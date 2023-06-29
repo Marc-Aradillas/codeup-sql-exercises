@@ -118,18 +118,32 @@ GROUP BY dept_no;
 
 # 9 rows returned
 
--- Determine how many different salaries each employee has had. This includes both historic and current.
+-- Determine how many different salaries each employee has had. This includes both historic and current. ***
+
+SELECT salary, COUNT(*)
+FROM salaries
+GROUP BY salary;
 
 
+-- Find the maximum salary for each employee. ***
 
--- Find the maximum salary for each employee.
+SELECT emp_no, MAX(salary), COUNT(*) AS employee_max_sal
+FROM salaries
+GROUP BY emp_no;
 
+-- Find the minimum salary for each employee. ***
 
-
--- Find the minimum salary for each employee.
+SELECT emp_no, MIN(salary), COUNT(*) AS employee_min_sal 
+FROM salaries
+GROUP BY emp_no;
 
 -- Find the standard deviation of salaries for each employee.
 
+SELECT STDDEV(salary) AS salary_stddev
+FROM salaries;
+
 -- Now find the max salary for each employee where that max salary is greater than $150,000.
+
+SELECT 
 
 -- Find the average salary for each employee where that average salary is between $80k and $90k.
