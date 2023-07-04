@@ -15,7 +15,7 @@ SHOW TABLES;
 
 # selected from both users and roles tables
 SELECT *
-FROM roles; 
+FROM roles;
 
 SELECT *
 FROM users;
@@ -28,30 +28,30 @@ SELECT users.name, users.id, roles.name AS 'role name'
 FROM roles
 INNER JOIN users ON users.role_id = roles.id; # BE OBVIOUS/EXPLICIT
 
-#INSTRUCTOR EX.
-SELECT *
-FROM users
-INNER JOIN roles ON rusers.role_id = roles.id;
+# INSTRUCTOR EX.
+-- SELECT *
+-- FROM users
+-- INNER JOIN roles ON users.role_id = roles.id;
 
 # LEFT JOIN ex.
 SELECT users.id, email, roles.name AS 'role name'
 FROM roles
 LEFT JOIN users ON users.role_id = roles.id;
 
-#INSTRUCTOR EX.
-SELECT *
-FROM users
-LEFT JOIN roles ON rusers.role_id = roles.id;
+# INSTRUCTOR EX.
+-- SELECT *
+-- FROM users
+-- LEFT JOIN roles ON users.role_id = roles.id;
 
 # RIGHT JOIN ex.
 SELECT users.name, email, roles.id AS rid
 FROM roles
 RIGHT JOIN users ON users.role_id = roles.id;
 
-#INSTRUCTOR EX.
-SELECT *
-FROM users
-RIGHT JOIN roles ON rusers.role_id = roles.id;
+# INSTRUCTOR EX.
+-- SELECT *
+-- FROM users
+-- RIGHT JOIN roles ON users.role_id = roles.id;
 
 -- 3. Integrate aggregate functions and clauses into our queries with JOIN statements
 
@@ -192,7 +192,7 @@ ORDER BY departments.dept_name ASC;
 
 -- 4. Find the current titles of employees currently working in the Customer Service department.
 
-SELECT titles.title, COUNT(departments.dept_name)
+SELECT titles.title, COUNT(departments.dept_name) as 'COUNT'
 FROM titles
 JOIN employees ON employees.emp_no = titles.emp_no
 JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
@@ -266,26 +266,27 @@ ORDER BY departments.dept_name ASC;
 
 
 
--- 6. Find the number of current employees in each department. ************************* STOPPED ***************************
+-- 6. Find the number of current employees in each department.
 
 SELECT dept_emp.dept_no AS dept_no, departments.dept_name AS dept_name, COUNT(*) AS num_employees
 FROM dept_emp
-JOIN departments ON dept_emp.emp_no = departments.emp_no
-JOIN employees ON departments.emp_no = employees.emp_no
-WHERE dept_emp.to_date = '9999-01-01'
-GROUP BY dept_name
-ORDER BY dept_name DESC;
+JOIN departments ON departments.dept_no = dept_emp.dept_no
+JOIN employees ON dept_emp.emp_no = employees.emp_no
+WHERE dept_emp.to_date = '9999-01-01' # could also use CURDATE() clause functions like example below
+GROUP BY dept_emp.dept_no
+ORDER BY departments.dept_no ASC;
+
 
 
 #INSTRUCTOR EX
 
-SELECT d.dept_no, d.dept_name, COUNT(*) AS num_employees
-FROM employees as e
-INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
-INNER JOIN departments AS d ON de.dept_no = d.dept_no
-WHERE de.to_date > CURDATE()
-GROUP BY d.dept_no, d.dept_name
-ORDER BY d.dept_no ASC;
+-- SELECT d.dept_no, d.dept_name, COUNT(*) AS num_employees
+-- FROM employees as e
+-- INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
+-- INNER JOIN departments AS d ON de.dept_no = d.dept_no
+-- WHERE de.to_date > CURDATE()
+-- GROUP BY d.dept_no, d.dept_name
+-- ORDER BY d.dept_no ASC;
 
 -- +---------+--------------------+---------------+
 -- | dept_no | dept_name          | num_employees |
@@ -305,26 +306,30 @@ ORDER BY d.dept_no ASC;
 
 -- 7. Which department has the highest average salary? Hint: Use current not historic information.
 
-SELECT departments.dept_name AS 'Department Name',
-	AVG(salaries.salary) AS average_salary
-FROM departments
-JOIN salaries ON departments.to_date = salaries.to_date
-WHERE salaries.to_date = '9999-01-01'
-GROUP BY department.dept_name
-ORDER BY department.dept_name DESC;
-
-#INSTRUCTOR EX
-
-SELECT d.dept_name, AVG(s.salary) AS average_salary
-FROM employees AS e
-INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
-INNER JOIN departments AS d ON d.dept_no = de.dept_no
-INNER JOIN salaries AS s ON s.emp_no = e.emp_no
-WHERE de.to_date > CURDATE()
-AND s.to_date < CURDATE()
-GROUP BY d.dept_name
-ORDER BY average_salary DESC
+SELECT departments.dept_name, AVG(salaries.salary) AS average_salary # could use ROUND() function to get rid of decimals.
+FROM employees
+JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
+JOIN salaries ON salaries.emp_no = employees.emp_no
+JOIN departments ON departments.dept_no = dept_emp.dept_no
+WHERE salaries.to_date >= '9999-01-01'
+AND dept_emp.to_date >= '9999-01-01'
+GROUP BY departments.dept_name
+ORDER BY departments.dept_name DESC
 LIMIT 1;
+
+# INSTRUCTOR EX
+
+-- SELECT d.dept_name, ROUND(AVG(s.salary)) AS average_salary
+-- FROM employees AS e
+-- INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no
+-- INNER JOIN departments AS d ON d.dept_no = de.dept_no
+-- INNER JOIN salaries AS s ON s.emp_no = e.emp_no
+-- WHERE de.to_date > CURDATE()
+-- AND s.to_date > CURDATE()
+-- GROUP BY d.dept_name
+-- ORDER BY average_salary DESC
+-- LIMIT 1;
+
 
 
 -- +-----------+----------------+
@@ -338,25 +343,25 @@ LIMIT 1;
 
 SELECT employees.first_name AS first_name, employees.last_name AS last_name
 FROM employees
-JOIN salaries ON salary.emp_no = employees.emp_no
-JOIN department ON department.to_date = salaries.to_date
-WHERE dept_name IN ('Marketing department') 
-AND MAX(salaries.salary)
-GROUP BY employee.first_name;
+JOIN dept_emp ON employees.emp_no = dept_emp.emp_no
+JOIN salaries ON salaries.emp_no = employees.emp_no
+JOIN departments ON departments.dept_no = dept_emp.dept_no
+WHERE dept_name IN ('Marketing')
+ORDER BY salaries.salary DESC
+LIMIT 1;
     
 
-#INSTRUCTOR EX
-
-SELECT e.first_name, e.last_name
-FROM employees AS e
-INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
-INNER JOIN departments AS d ON d.dept_no = de.dept_no
-INNER JOIN salaries AS s ON s.emp_no = e.emp_no
-WHERE de.to_date > CURDATE()
-AND s.to_date > CURDATE()
-AND d.dept_name = 'Marketing'
-ORDER BY s.salary DESC
-LIMIT 1;
+# INSTRUCTOR EX
+-- SELECT e.first_name, e.last_name
+-- FROM employees AS e
+-- INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
+-- INNER JOIN departments AS d ON d.dept_no = de.dept_no
+-- INNER JOIN salaries AS s ON s.emp_no = e.emp_no
+-- WHERE de.to_date > CURDATE()
+-- AND s.to_date > CURDATE()
+-- AND d.dept_name = 'Marketing'
+-- ORDER BY s.salary DESC
+-- LIMIT 1;
 
 -- +------------+-----------+
 -- | first_name | last_name |
@@ -368,28 +373,31 @@ LIMIT 1;
 
 -- 9.  Which current department manager has the highest salary?
 
-SELECT employees.first_name, employees.last_name, salaries.salary, departments.dept_name
-FROM salaries
-JOIN departments ON salaries.to_date = departments.to_date
-JOIN employees ON employees.emp_no = salaries.emp_no 
-WHERE MAX(salaries.salary)
-	AND dept_manager.to_date = '9999-01-01'
-GROUP by first_name;
+SELECT employees.first_name, employees.last_name, salaries.salary AS 'Salary', departments.dept_name
+FROM employees
+JOIN salaries ON salaries.emp_no = employees.emp_no
+JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
+JOIN departments ON departments.dept_no = dept_emp.dept_no
+JOIN dept_manager ON dept_manager.emp_no = employees.emp_no
+WHERE dept_manager.to_date >= '9999-01-01' 
+AND salaries.to_date >= '9999-01-01'
+AND departments.dept_name = 'Marketing'
+ORDER BY salaries.salary DESC
+LIMIT 1;
 
 
 #INSTRUCTOR EX
-
-SELECT d.dept_name AS 'Department Name', CONCAT(e.first_name, ' ', e.last_name) AS 'Department Manager', s.salary AS 'Salary'
-FROM employees AS e
-INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
-INNER JOIN departments AS d ON d.dept_no = de.dept_no
-INNER JOIN dept_manager AS dm ON de.emp_no = dm.emp_no
-INNER JOIN salaries AS s ON s.emp_no = e.emp_no
-WHERE dm.to_date > CURDATE()
-AND s.to_date > CURDATE()
-AND d.dept_name = 'Marketing'
-ORDER BY s.salary DESC
-LIMIT 1;
+-- SELECT d.dept_name AS 'Department Name', CONCAT(e.first_name, ' ', e.last_name) AS 'Department Manager', s.salary AS 'Salary'
+-- FROM employees AS e
+-- INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
+-- INNER JOIN departments AS d ON d.dept_no = de.dept_no
+-- INNER JOIN dept_manager AS dm ON de.emp_no = dm.emp_no
+-- INNER JOIN salaries AS s ON s.emp_no = e.emp_no
+-- WHERE dm.to_date > CURDATE()
+-- AND s.to_date > CURDATE()
+-- AND d.dept_name = 'Marketing'
+-- ORDER BY s.salary DESC
+-- LIMIT 1;
 
 -- +------------+-----------+--------+-----------+
 -- | first_name | last_name | salary | dept_name |
@@ -401,22 +409,23 @@ LIMIT 1;
 
 -- 10. Determine the average salary for each department. Use all salary information and round your results.
 
-SELECT departments.dept_name AS dept_name, ROUND(AVG(salaries.salary)) AS average_salary
-FROM departments
-JOIN salaries ON salaries.to_date = departments.to_date
-GROUP BY dept_name
+SELECT departments.dept_name, ROUND(AVG(salaries.salary)) AS average_salary
+FROM salaries
+JOIN employees ON employees.emp_no = salaries.emp_no
+JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
+JOIN departments ON departments.dept_no = dept_emp.dept_no # had errors where i needed to change the order of the join statements; had to join dept_emp before referencing its columns.
+GROUP BY departments.dept_name
 ORDER BY average_salary DESC;
 
 
-#INSTRUCTOR EX
-
-SELECT d.dept_name, ROUND(AVG(s.salary)) as average_salary
-FROM employees AS e
-INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
-INNER JOIN departments AS d ON d.dept_no = de.dept_no
-INNER JOIN salaries AS s ON s.emp_no = e.emp_no
-GROUP BY d.dept_name
-ORDER BY average_salary DESC;
+# INSTRUCTOR EX
+-- SELECT d.dept_name, ROUND(AVG(s.salary)) as average_salary
+-- FROM employees AS e
+-- INNER JOIN dept_emp AS de ON e.emp_no = de.emp_no 
+-- INNER JOIN departments AS d ON d.dept_no = de.dept_no
+-- INNER JOIN salaries AS s ON s.emp_no = e.emp_no
+-- GROUP BY d.dept_name
+-- ORDER BY average_salary DESC;
 
 
 -- +--------------------+----------------+
@@ -443,7 +452,7 @@ ORDER BY average_salary DESC;
 
 -- 11. (BONUS!) Find the names of all current employees, their department name, and their current manager's name.
 
-SELEC
+SELECT 
 
 -- 240,124 Rows
 
