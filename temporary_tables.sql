@@ -17,10 +17,15 @@ USE employees;
 
 -- Specify the db where you have permissions and add the temp table name.
 -- Replace "my_database_with_permissions"" with the database name where you have appropriate permissions. It should match your username.
-CREATE TEMPORARY TABLE somerville_2273.employees_with_departments AS 
-SELECT * FROM employees JOIN dept_emp USING(emp_no);
+CREATE TEMPORARY TABLE somerville_2273.employees_with_departments AS ( 
+SELECT first_name, last_name, dept_name 
+FROM employees.employees
+JOIN employees.dept_emp USING(emp_no)
+JOIN employees.departments USING(dept_no)
+);
 
 DROP TABLES somerville_2273.employees_with_departments;
+
 -- Change the current db.
 USE somerville_2273;
 SELECT * FROM employees_with_departments;
@@ -30,7 +35,7 @@ ALTER TABLE somerville_2273.employees_with_departments
 ADD full_name VARCHAR(110);
 
 	-- b. Update the table so that the full_name column contains the correct data.
-USE somerville_2273;
+
 SELECT * FROM somerville_2273.employees_with_departments;
 
 UPDATE somerville_2273.employees_with_departments
@@ -80,10 +85,15 @@ SELECT * FROM somerville_2273.temp_payments;
 USE employees;
 
 -- Calculated the average salary and standard deviation for the entire company
-SELECT AVG(salary) AS overall_average_salary, STDDEV(salary) AS overall_salary_stddev
-FROM salaries
-WHERE to_date >= CURDATE();
+SELECT 
+    AVG(salary) AS overall_average_salary,
+    STDDEV(salary) AS overall_salary_stddev
+FROM
+    salaries
+WHERE
+    to_date >= CURDATE();
 
+SELECT * FROM somerville_2273.temp_payments;
 -- Calculated the average salary and z-score for each department
 SELECT departments.dept_name, AVG(salaries.salary) AS department_average_salary, (AVG(salaries.salary) - overall_avg.avg_salary) / overall_avg.std_dev AS z_score
 FROM salaries
@@ -98,6 +108,9 @@ INNER JOIN (
 WHERE dept_emp.to_date >= CURDATE()
 GROUP BY departments.dept_name, overall_avg.avg_salary -- included the non-aggregated column
 ORDER BY z_score DESC;
+
+SELECT * FROM somerville_2273.temp_payments;
+
 
 # Sales is best to work for
 # Human Resources is the worst
