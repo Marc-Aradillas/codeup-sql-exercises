@@ -143,7 +143,7 @@ SELECT * FROM somerville_2273.temp_payments;
 -- Hint: How should the SQL code used in exercise 3 be altered to instead use historic salary values?
 
 
-# It tells us almosta similary story where sales is still top dept salary average historically, but customer service has the lowest department salary average. The historic z_scres calculated were all zeros and did not help in determining any differences to draw conclusions.
+# It tells us almost a similary story where sales is still top dept salary average historically, but customer service has the lowest department salary average. The historic z_scres calculated were all zeros and did not help in determining any differences to draw conclusions.
 
 
 -- Calculated the historic overall average and standard deviation for salaries
